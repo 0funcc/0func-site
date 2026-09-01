@@ -19,4 +19,9 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  /* Several components size their monospace box-drawing borders from a
+     JS-measured char width; any imprecision there can render a border row
+     a hair wider than its container. Clip at the body level as a backstop
+     so that can never cause real horizontal scroll on narrow viewports. */
+  overflow-x: hidden;
 }

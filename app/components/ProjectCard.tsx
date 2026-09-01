@@ -6,6 +6,7 @@ import { useGSAP } from "@gsap/react";
 import Image from "next/image";
 import ScrambleLink from "./ScrambleLink";
 import { noisyColumn } from "./asciiNoise";
+import useIsMobile from "../hooks/useIsMobile";
 
 export default function ProjectCard({
     title,
@@ -31,9 +32,11 @@ export default function ProjectCard({
     const [contentHeight, setContentHeight] = useState(0);
     const [settling, setSettling] = useState(false);
     const [descHeight, setDescHeight] = useState<number | "auto">(0);
+    const [mobileExpanded, setMobileExpanded] = useState(false);
     const expandedHeight = useRef(0);
     const heightRef = useRef(0);
     const heightProxy = useRef({ h: 0 });
+    const isMobile = useIsMobile();
 
     useEffect(() => {
         const box = boxRef.current;
@@ -118,23 +121,60 @@ export default function ProjectCard({
         });
     });
 
+    // Hover has no equivalent on touch, so the card is tap-toggled on
+    // mobile instead. Crossing back over the breakpoint should collapse it
+    // rather than leave it stuck open with no hover to close it.
+    useEffect(() => {
+        if (isMobile || !mobileExpanded) return;
+        setMobileExpanded(false);
+        if (expandRef.current) {
+            heightRef.current = expandRef.current.scrollHeight;
+            setDescHeight(heightRef.current);
+        }
+        tweenHeight(0);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isMobile]);
+
     const inner = Math.max(Math.round(cols * boxCharsPerCol) - 2, 0);
     const border = "─".repeat(inner);
     const rows = lineHeightPx > 0 ? Math.floor(contentHeight / lineHeightPx) : 0;
     const edge = noisyColumn(rows, settling);
+    // Mirrors `group-hover:text-foreground` for mobile, where there's no
+    // hover to trigger it — an expanded card gets the same accent color.
+    const accentClass = mobileExpanded ? "text-foreground" : "text-accent group-hover:text-foreground";
 
     const content = (
         <div
             ref={boxRef}
-            onMouseEnter={() => tweenHeight(expandedHeight.current)}
+            onMouseEnter={() => {
+                if (isMobile) return;
+                tweenHeight(expandedHeight.current);
+            }}
             onMouseLeave={() => {
+                if (isMobile) return;
                 if (expandRef.current) {
                     heightRef.current = expandRef.current.scrollHeight;
                     setDescHeight(heightRef.current);
                 }
                 tweenHeight(0);
             }}
-            className="group w-full bg-background text-left font-mono text-sm leading-none text-foreground"
+            onClick={() => {
+                if (!isMobile) return;
+                const next = !mobileExpanded;
+                setMobileExpanded(next);
+                if (next) {
+                    tweenHeight(expandedHeight.current);
+                } else {
+                    if (expandRef.current) {
+                        heightRef.current = expandRef.current.scrollHeight;
+                        setDescHeight(heightRef.current);
+                    }
+                    tweenHeight(0);
+                }
+            }}
+            className={`group relative w-full overflow-hidden bg-background text-left font-mono text-sm leading-none text-foreground ${
+                isMobile ? "cursor-pointer" : ""
+            }`}
         >
             <span ref={probeRef} aria-hidden="true" className="absolute invisible whitespace-pre">
                 {"0".repeat(100)}
@@ -143,7 +183,7 @@ export default function ProjectCard({
                 {"─".repeat(50)}
             </span>
 
-            <div aria-hidden="true" className="whitespace-pre text-accent group-hover:text-foreground">
+            <div aria-hidden="true" className={`whitespace-pre ${accentClass}`}>
                 {"┌" + border + "┐"}
             </div>
 
@@ -155,7 +195,7 @@ export default function ProjectCard({
                     // font-shaping quirk as the navbar's isolated pipe) —
                     // nudged to match visually.
                     style={{ height: contentHeight, position: "relative", left: "0.116em" }}
-                    className="overflow-hidden whitespace-pre-line text-accent group-hover:text-foreground"
+                    className={`overflow-hidden whitespace-pre-line ${accentClass}`}
                 >
                     {edge}
                 </div>
@@ -193,13 +233,13 @@ export default function ProjectCard({
                 <div
                     aria-hidden="true"
                     style={{ height: contentHeight, position: "relative", left: "0.196em" }}
-                    className="overflow-hidden whitespace-pre-line text-accent group-hover:text-foreground"
+                    className={`overflow-hidden whitespace-pre-line ${accentClass}`}
                 >
                     {edge}
                 </div>
             </div>
 
-            <div aria-hidden="true" className="whitespace-pre text-accent group-hover:text-foreground">
+            <div aria-hidden="true" className={`whitespace-pre ${accentClass}`}>
                 {"└" + border + "┘"}
             </div>
         </div>

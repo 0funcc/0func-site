@@ -63,6 +63,13 @@ export default function ScrambleLink({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    // `text` only seeds from `label` at mount; a caller that changes `label`
+    // on an already-mounted instance (e.g. a MENU/CLOSE toggle) needs this
+    // kept in sync or the old label sticks forever.
+    useEffect(() => {
+        setText(label);
+    }, [label]);
+
     return (
         <a
             ref={ref}

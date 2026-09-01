@@ -14,8 +14,8 @@ export default function Footer() {
 
     return (
         <footer className="flex min-h-[50vh] w-full flex-col overflow-hidden bg-accent text-foreground">
-            <div className="flex w-full items-start px-6 pt-10">
-                <div className="w-3/4">
+            <div className="flex w-full flex-col items-start gap-8 px-6 pt-10 sm:flex-row sm:gap-0">
+                <div className="w-full sm:w-3/4">
                     <FitText text="ZEROFUNCTION" weight={400} className="font-pixel" />
                     <FitText text="BASED IN KUWAIT" weight={400} className="font-pixel" />
                     <FitText
@@ -26,13 +26,13 @@ export default function Footer() {
                     <FitText text="CREATING APPS, WEBSITES, GAMES & MORE" weight={400} className="font-pixel" />
                 </div>
 
-                <div className="flex w-1/4 flex-col items-end gap-8 text-right">
-                    <div className="flex flex-col items-end gap-3">
+                <div className="flex w-full gap-8 sm:w-1/4 sm:flex-col sm:items-end sm:text-right">
+                    <div className="flex flex-1 flex-col gap-3 sm:flex-none sm:items-end">
                         <ScrambleLink href="#about" label="ABOUT" onClick={scrollTo("#about")} />
                         <ScrambleLink href="#projects" label="PROJECTS" onClick={scrollTo("#projects")} />
                         <ScrambleLink href="#contact" label="CONTACT" onClick={scrollTo("#contact")} />
                     </div>
-                    <div className="flex flex-col items-end gap-3">
+                    <div className="flex flex-1 flex-col gap-3 sm:flex-none sm:items-end">
                         <ScrambleLink href="https://github.com/0funcc" label="GITHUB" target="_blank" />
                         <ScrambleLink href="https://instagram.com/0func" label="INSTAGRAM" target="_blank" />
                         <ScrambleLink href="https://linkedin.com/in/0func" label="LINKEDIN" target="_blank" />

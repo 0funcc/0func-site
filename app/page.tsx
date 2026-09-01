@@ -10,7 +10,7 @@ export default function Home() {
       <NavBar />
       <section
         id="about"
-        className="mx-auto flex h-screen max-w-3xl scroll-mt-24 flex-col items-center justify-center px-4 py-32 text-center"
+        className="mx-auto flex min-h-screen max-w-3xl scroll-mt-24 flex-col items-center justify-center px-4 py-20 sm:py-32 text-center"
       >
         <HeroTitle realName="ALI ABDUL GAFUR" alias="ZEROFUNCTION" />
         <p className="mt-6 max-w-md font-mono text-sm leading-relaxed opacity-60">
@@ -30,7 +30,7 @@ export default function Home() {
       </section>
       <section
         id="projects"
-        className="mx-auto flex h-screen max-w-3xl scroll-mt-24 flex-col items-center justify-center px-4 py-32 text-center"
+        className="mx-auto flex min-h-screen max-w-3xl scroll-mt-24 flex-col items-center justify-center px-4 py-20 sm:py-32 text-center"
       >
         <h2 className="mt-6 max-w-md self-start font-pixel text-2xl font-bold text-foreground text-left">
           [ PROJECTS ]
@@ -46,7 +46,7 @@ export default function Home() {
       </section>
       <section
         id="contact"
-        className="mx-auto flex h-screen max-w-3xl scroll-mt-24 flex-col items-center justify-center px-4 py-32 text-center"
+        className="mx-auto flex min-h-screen max-w-3xl scroll-mt-24 flex-col items-center justify-center px-4 py-20 sm:py-32 text-center"
       >
         <h2 className="mt-6 max-w-md self-start font-pixel text-2xl font-bold text-foreground text-left">
           [ CONTACT ]

@@ -1,0 +1,24 @@
+"use client";
+
+import { useSyncExternalStore } from "react";
+
+// Matches Tailwind's `sm` breakpoint used throughout the site.
+const MOBILE_QUERY = "(max-width: 639px)";
+
+function subscribe(callback: () => void) {
+    const mql = window.matchMedia(MOBILE_QUERY);
+    mql.addEventListener("change", callback);
+    return () => mql.removeEventListener("change", callback);
+}
+
+function getSnapshot() {
+    return window.matchMedia(MOBILE_QUERY).matches;
+}
+
+function getServerSnapshot() {
+    return false;
+}
+
+export default function useIsMobile() {
+    return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+}

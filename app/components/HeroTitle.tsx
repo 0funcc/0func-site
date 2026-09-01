@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import ASCIIText, { ASCIITextHandle } from "./ASCIIText";
+import useIsMobile from "../hooks/useIsMobile";
 
 const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -11,6 +12,8 @@ export default function HeroTitle({ realName, alias }: { realName: string; alias
     const containerRef = useRef<HTMLDivElement>(null);
     const asciiTextRef = useRef<ASCIITextHandle>(null);
     const currentRef = useRef(realName);
+    const [showingAlias, setShowingAlias] = useState(false);
+    const isMobile = useIsMobile();
 
     const { contextSafe } = useGSAP({ scope: containerRef });
 
@@ -48,9 +51,21 @@ export default function HeroTitle({ realName, alias }: { realName: string; alias
     return (
         <div
             ref={containerRef}
-            onMouseEnter={() => scrambleTo(alias)}
-            onMouseLeave={() => scrambleTo(realName)}
-            className="relative h-48 w-full sm:h-64"
+            onMouseEnter={() => {
+                if (isMobile) return;
+                scrambleTo(alias);
+            }}
+            onMouseLeave={() => {
+                if (isMobile) return;
+                scrambleTo(realName);
+            }}
+            onClick={() => {
+                if (!isMobile) return;
+                const next = !showingAlias;
+                setShowingAlias(next);
+                scrambleTo(next ? alias : realName);
+            }}
+            className={`relative h-48 w-full sm:h-64 ${isMobile ? "cursor-pointer" : ""}`}
         >
             <ASCIIText ref={asciiTextRef} text={realName} asciiFontSize={4} textFontSize={120} />
         </div>
